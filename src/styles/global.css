@@ -54,6 +54,8 @@ html {
 
 body {
   margin: 0;
+  /* 커스텀 화살표 — 끝점(0 2)이 실제 클릭 지점. 미지원 시 기본 화살표 */
+  cursor: url('/cursor.svg') 2 2, default;
   background: var(--bg);
   color: var(--fg);
   font-family:
@@ -108,6 +110,34 @@ a {
 a:hover {
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+/* 클릭 가능한 요소 — 조준선 형태의 포인터 */
+a,
+button,
+summary,
+[role='button'],
+.entry-list > li {
+  cursor: url('/cursor-pointer.svg') 12 12, pointer;
+}
+
+/* 텍스트 선택 영역은 기본 커서 유지 */
+input,
+textarea,
+select {
+  cursor: auto;
+}
+
+/* 터치 기기에서는 커스텀 커서 무의미 — 기본값으로 */
+@media (hover: none) {
+  body,
+  a,
+  button,
+  summary,
+  [role='button'],
+  .entry-list > li {
+    cursor: auto;
+  }
 }
 
 :focus-visible {

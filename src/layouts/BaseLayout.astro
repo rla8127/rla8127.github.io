@@ -34,6 +34,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE.url).href;
       href="/rss.xml"
     />
     <meta name="generator" content={Astro.generator} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" />
     <link
       rel="stylesheet"
