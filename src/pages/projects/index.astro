@@ -1,0 +1,45 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+
+const projects = (
+  await getCollection(
+    'projects',
+    (entry) => import.meta.env.DEV || !entry.data.draft,
+  )
+).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="Projects" description="지금까지 만든 것들">
+  <h1>Projects</h1>
+
+  {
+    projects.length === 0 ? (
+      <p class="entry-desc">
+        아직 프로젝트가 없습니다. <code>src/content/projects/</code> 에 마크다운 파일을 추가하세요.
+      </p>
+    ) : (
+      <ul class="entry-list">
+        {projects.map((project) => (
+          <li>
+            <h2 class="entry-title">
+              <a href={`/projects/${project.id}/`}>{project.data.title}</a>
+            </h2>
+            <p class="entry-meta">
+              <FormattedDate date={project.data.date} />
+            </p>
+            <p class="entry-desc">{project.data.summary}</p>
+            {project.data.stack.length > 0 && (
+              <ul class="badges">
+                {project.data.stack.map((tech) => (
+                  <li class="badge">{tech}</li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</BaseLayout>

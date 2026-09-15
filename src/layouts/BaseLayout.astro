@@ -1,0 +1,74 @@
+---
+import { SITE, NAV, SOCIAL } from '../consts';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = SITE.description } = Astro.props;
+const pageTitle = title ? `${title} · ${SITE.title}` : SITE.title;
+const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE.url).href;
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={SITE.title}
+      href="/rss.xml"
+    />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap inner">
+        <a class="site-title" href="/">{SITE.title}</a>
+        <nav class="site-nav">
+          {
+            NAV.map((item) => (
+              <a
+                href={item.href}
+                aria-current={
+                  (item.href === '/' ? pathname === '/' : pathname.startsWith(item.href))
+                    ? 'page'
+                    : undefined
+                }
+              >
+                {item.label}
+              </a>
+            ))
+          }
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <slot />
+    </main>
+
+    <footer class="wrap site-footer">
+      <span>© {new Date().getFullYear()} {SITE.author}</span>
+      <span>
+        {SOCIAL.github && <a href={SOCIAL.github}>GitHub</a>}
+        {' · '}
+        <a href="/rss.xml">RSS</a>
+      </span>
+    </footer>
+  </body>
+</html>

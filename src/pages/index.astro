@@ -1,0 +1,76 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import { SITE } from '../consts';
+
+const isPublished = (entry: { data: { draft: boolean } }) =>
+  import.meta.env.DEV || !entry.data.draft;
+
+// 대표 프로젝트 우선, 없으면 최신 프로젝트 3개
+const projects = (await getCollection('projects', isPublished)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const featured = projects.filter((p) => p.data.featured);
+const showcase = (featured.length > 0 ? featured : projects).slice(0, 3);
+
+const recentPosts = (await getCollection('posts', isPublished))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 5);
+---
+
+<BaseLayout>
+  <h1>{SITE.title}</h1>
+  <p class="entry-desc">{SITE.description}</p>
+
+  <h2>Projects</h2>
+  {
+    showcase.length === 0 ? (
+      <p class="entry-desc">
+        아직 프로젝트가 없습니다. <code>src/content/projects/</code> 에 파일을 추가하세요.
+      </p>
+    ) : (
+      <ul class="entry-list">
+        {showcase.map((project) => (
+          <li>
+            <h3 class="entry-title">
+              <a href={`/projects/${project.id}/`}>{project.data.title}</a>
+            </h3>
+            <p class="entry-desc">{project.data.summary}</p>
+            {project.data.stack.length > 0 && (
+              <ul class="badges">
+                {project.data.stack.map((tech) => (
+                  <li class="badge">{tech}</li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  {projects.length > showcase.length && <p><a href="/projects">프로젝트 전체 보기 →</a></p>}
+
+  <h2>Recent Posts</h2>
+  {
+    recentPosts.length === 0 ? (
+      <p class="entry-desc">
+        아직 글이 없습니다. <code>src/content/posts/</code> 에 파일을 추가하세요.
+      </p>
+    ) : (
+      <ul class="entry-list">
+        {recentPosts.map((post) => (
+          <li>
+            <h3 class="entry-title">
+              <a href={`/posts/${post.id}/`}>{post.data.title}</a>
+            </h3>
+            <p class="entry-meta">
+              <FormattedDate date={post.data.pubDate} />
+            </p>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  <p><a href="/posts">글 전체 보기 →</a></p>
+</BaseLayout>

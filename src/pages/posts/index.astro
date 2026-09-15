@@ -1,0 +1,45 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+
+const posts = (
+  await getCollection(
+    'posts',
+    (entry) => import.meta.env.DEV || !entry.data.draft,
+  )
+).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout title="Posts" description="개발하면서 남긴 기록">
+  <h1>Posts</h1>
+
+  {
+    posts.length === 0 ? (
+      <p class="entry-desc">
+        아직 글이 없습니다. <code>src/content/posts/</code> 에 마크다운 파일을 추가하세요.
+      </p>
+    ) : (
+      <ul class="entry-list">
+        {posts.map((post) => (
+          <li>
+            <h2 class="entry-title">
+              <a href={`/posts/${post.id}/`}>{post.data.title}</a>
+            </h2>
+            <p class="entry-meta">
+              <FormattedDate date={post.data.pubDate} />
+            </p>
+            {post.data.description && <p class="entry-desc">{post.data.description}</p>}
+            {post.data.tags.length > 0 && (
+              <ul class="badges">
+                {post.data.tags.map((tag) => (
+                  <li class="badge">{tag}</li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</BaseLayout>
