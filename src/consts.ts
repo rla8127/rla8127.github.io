@@ -1,8 +1,8 @@
 // 사이트 전역 설정 — 이름/소개/링크는 여기만 고치면 전체에 반영됩니다.
 export const SITE = {
-  title: '김동현',
-  description: '백엔드 개발자 김동현의 프로젝트와 기록',
-  author: '김동현',
+  title: 'Hyun Blog',
+  description: '개발하면서 배운 것들을 기록합니다.',
+  author: 'Hyun',
   url: 'https://rla8127.github.io',
 } as const;
 
