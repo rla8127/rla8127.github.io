@@ -21,36 +21,37 @@ const { Content } = await render(project);
 
 <BaseLayout title={project.data.title} description={project.data.summary}>
   <article>
-    <h1>{project.data.title}</h1>
-    <p class="entry-meta">
-      <FormattedDate date={project.data.date} />
-    </p>
-    <p class="entry-desc">{project.data.summary}</p>
+    <header class="article-head">
+      <h1>{project.data.title}</h1>
+      <p class="entry-meta">
+        <FormattedDate date={project.data.date} />
+      </p>
+      <p class="entry-desc">{project.data.summary}</p>
 
-    {
-      project.data.stack.length > 0 && (
-        <ul class="badges">
-          {project.data.stack.map((tech) => (
-            <li class="badge">{tech}</li>
-          ))}
-        </ul>
-      )
-    }
+      {
+        project.data.stack.length > 0 && (
+          <ul class="badges">
+            {project.data.stack.map((tech) => (
+              <li class="badge">{tech}</li>
+            ))}
+          </ul>
+        )
+      }
 
-    {
-      (project.data.repo || project.data.demo) && (
-        <p>
-          {project.data.repo && <a href={project.data.repo}>Repository</a>}
-          {project.data.repo && project.data.demo && ' · '}
-          {project.data.demo && <a href={project.data.demo}>Live demo</a>}
-        </p>
-      )
-    }
+      {
+        (project.data.repo || project.data.demo) && (
+          <div class="hero-links">
+            {project.data.repo && <a href={project.data.repo}>Repository</a>}
+            {project.data.demo && <a href={project.data.demo}>Live demo</a>}
+          </div>
+        )
+      }
+    </header>
 
     <div class="prose">
       <Content />
     </div>
   </article>
 
-  <p><a href="/projects">← Projects</a></p>
+  <a class="back-link" href="/projects">← Projects</a>
 </BaseLayout>

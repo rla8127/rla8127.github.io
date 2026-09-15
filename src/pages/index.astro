@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import FormattedDate from '../components/FormattedDate.astro';
-import { SITE } from '../consts';
+import { SITE, SOCIAL } from '../consts';
 
 const isPublished = (entry: { data: { draft: boolean } }) =>
   import.meta.env.DEV || !entry.data.draft;
@@ -20,43 +20,53 @@ const recentPosts = (await getCollection('posts', isPublished))
 ---
 
 <BaseLayout>
-  <h1>{SITE.title}</h1>
-  <p class="entry-desc">{SITE.description}</p>
+  <section class="hero">
+    <h1>{SITE.title}</h1>
+    <p>{SITE.description}</p>
+    <div class="hero-links">
+      <a href="/posts">글 읽기</a>
+      <a href="/about">소개</a>
+      {SOCIAL.github && <a href={SOCIAL.github}>GitHub</a>}
+    </div>
+  </section>
 
-  <h2>Projects</h2>
   {
-    showcase.length === 0 ? (
-      <p class="entry-desc">
-        아직 프로젝트가 없습니다. <code>src/content/projects/</code> 에 파일을 추가하세요.
-      </p>
-    ) : (
-      <ul class="entry-list">
-        {showcase.map((project) => (
-          <li>
-            <h3 class="entry-title">
-              <a href={`/projects/${project.id}/`}>{project.data.title}</a>
-            </h3>
-            <p class="entry-desc">{project.data.summary}</p>
-            {project.data.stack.length > 0 && (
-              <ul class="badges">
-                {project.data.stack.map((tech) => (
-                  <li class="badge">{tech}</li>
-                ))}
-              </ul>
-            )}
-          </li>
-        ))}
-      </ul>
+    showcase.length > 0 && (
+      <>
+        <div class="section-head">
+          <h2>Projects</h2>
+          {projects.length > showcase.length && (
+            <a href="/projects">전체 보기 →</a>
+          )}
+        </div>
+        <ul class="entry-list">
+          {showcase.map((project) => (
+            <li>
+              <h3 class="entry-title">
+                <a href={`/projects/${project.id}/`}>{project.data.title}</a>
+              </h3>
+              <p class="entry-desc">{project.data.summary}</p>
+              {project.data.stack.length > 0 && (
+                <ul class="badges">
+                  {project.data.stack.map((tech) => (
+                    <li class="badge">{tech}</li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ul>
+      </>
     )
   }
-  {projects.length > showcase.length && <p><a href="/projects">프로젝트 전체 보기 →</a></p>}
 
-  <h2>Recent Posts</h2>
+  <div class="section-head">
+    <h2>Recent Posts</h2>
+    {recentPosts.length > 0 && <a href="/posts">전체 보기 →</a>}
+  </div>
   {
     recentPosts.length === 0 ? (
-      <p class="entry-desc">
-        아직 글이 없습니다. <code>src/content/posts/</code> 에 파일을 추가하세요.
-      </p>
+      <p class="empty">아직 글이 없습니다.</p>
     ) : (
       <ul class="entry-list">
         {recentPosts.map((post) => (
@@ -67,10 +77,12 @@ const recentPosts = (await getCollection('posts', isPublished))
             <p class="entry-meta">
               <FormattedDate date={post.data.pubDate} />
             </p>
+            {post.data.description && (
+              <p class="entry-desc">{post.data.description}</p>
+            )}
           </li>
         ))}
       </ul>
     )
   }
-  <p><a href="/posts">글 전체 보기 →</a></p>
 </BaseLayout>

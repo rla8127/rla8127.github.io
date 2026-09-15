@@ -21,33 +21,35 @@ const { Content } = await render(post);
 
 <BaseLayout title={post.data.title} description={post.data.description}>
   <article>
-    <h1>{post.data.title}</h1>
-    <p class="entry-meta">
-      <FormattedDate date={post.data.pubDate} />
+    <header class="article-head">
+      <h1>{post.data.title}</h1>
+      <p class="entry-meta">
+        <FormattedDate date={post.data.pubDate} />
+        {
+          post.data.updatedDate && (
+            <>
+              {' · 수정 '}
+              <FormattedDate date={post.data.updatedDate} />
+            </>
+          )
+        }
+      </p>
+
       {
-        post.data.updatedDate && (
-          <>
-            {' · 수정 '}
-            <FormattedDate date={post.data.updatedDate} />
-          </>
+        post.data.tags.length > 0 && (
+          <ul class="badges">
+            {post.data.tags.map((tag) => (
+              <li class="badge">{tag}</li>
+            ))}
+          </ul>
         )
       }
-    </p>
-
-    {
-      post.data.tags.length > 0 && (
-        <ul class="badges">
-          {post.data.tags.map((tag) => (
-            <li class="badge">{tag}</li>
-          ))}
-        </ul>
-      )
-    }
+    </header>
 
     <div class="prose">
       <Content />
     </div>
   </article>
 
-  <p><a href="/posts">← Posts</a></p>
+  <a class="back-link" href="/posts">← Posts</a>
 </BaseLayout>

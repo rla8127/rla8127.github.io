@@ -12,13 +12,14 @@ const posts = (
 ---
 
 <BaseLayout title="Posts" description="개발하면서 남긴 기록">
-  <h1>Posts</h1>
+  <section class="hero">
+    <h1>Posts</h1>
+    <p>개발하면서 남긴 기록</p>
+  </section>
 
   {
     posts.length === 0 ? (
-      <p class="entry-desc">
-        아직 글이 없습니다. <code>src/content/posts/</code> 에 마크다운 파일을 추가하세요.
-      </p>
+      <p class="empty">아직 글이 없습니다.</p>
     ) : (
       <ul class="entry-list">
         {posts.map((post) => (
@@ -29,7 +30,9 @@ const posts = (
             <p class="entry-meta">
               <FormattedDate date={post.data.pubDate} />
             </p>
-            {post.data.description && <p class="entry-desc">{post.data.description}</p>}
+            {post.data.description && (
+              <p class="entry-desc">{post.data.description}</p>
+            )}
             {post.data.tags.length > 0 && (
               <ul class="badges">
                 {post.data.tags.map((tag) => (

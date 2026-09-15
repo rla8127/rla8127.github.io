@@ -12,13 +12,14 @@ const projects = (
 ---
 
 <BaseLayout title="Projects" description="지금까지 만든 것들">
-  <h1>Projects</h1>
+  <section class="hero">
+    <h1>Projects</h1>
+    <p>지금까지 만든 것들</p>
+  </section>
 
   {
     projects.length === 0 ? (
-      <p class="entry-desc">
-        아직 프로젝트가 없습니다. <code>src/content/projects/</code> 에 마크다운 파일을 추가하세요.
-      </p>
+      <p class="empty">아직 공개된 프로젝트가 없습니다.</p>
     ) : (
       <ul class="entry-list">
         {projects.map((project) => (

@@ -4,25 +4,25 @@ import { SITE, SOCIAL } from '../consts';
 ---
 
 <BaseLayout title="About" description={`${SITE.author} 소개`}>
-  <h1>About</h1>
+  <section class="hero">
+    <h1>About</h1>
+    <p>안녕하세요, {SITE.author}입니다.</p>
+    <div class="hero-links">
+      {SOCIAL.github && <a href={SOCIAL.github}>GitHub</a>}
+      {SOCIAL.email && <a href={`mailto:${SOCIAL.email}`}>Email</a>}
+      {SOCIAL.linkedin && <a href={SOCIAL.linkedin}>LinkedIn</a>}
+    </div>
+  </section>
 
   <div class="prose">
     <p>
-      안녕하세요, {SITE.author}입니다. 이 페이지의 내용은
-      <code>src/pages/about.astro</code> 에서 수정할 수 있습니다.
+      이 페이지의 내용은 <code>src/pages/about.astro</code> 에서 수정할 수 있습니다.
     </p>
 
     <h2>기술 스택</h2>
     <ul>
       <li>Backend — Python, FastAPI, PostgreSQL, Redis</li>
       <li>Infra — Docker, AWS</li>
-    </ul>
-
-    <h2>연락처</h2>
-    <ul>
-      {SOCIAL.github && <li><a href={SOCIAL.github}>GitHub</a></li>}
-      {SOCIAL.email && <li><a href={`mailto:${SOCIAL.email}`}>{SOCIAL.email}</a></li>}
-      {SOCIAL.linkedin && <li><a href={SOCIAL.linkedin}>LinkedIn</a></li>}
     </ul>
   </div>
 </BaseLayout>
